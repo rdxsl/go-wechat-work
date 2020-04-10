@@ -17,7 +17,9 @@ type AccessToken struct {
 	ExpiresIn   int    `json:"expires_in"`
 }
 
-func GetAccessTocken() (accessToken AccessToken, err error) {
+var accessToken AccessToken
+
+func GetAccessTocken() (err error) {
 	wechatCorpID := os.Getenv("WECHAT_CORPID")
 	wechatCorpSecret := os.Getenv("WECHAT_CORPSECRET")
 	if wechatCorpID == "" || wechatCorpSecret == "" {

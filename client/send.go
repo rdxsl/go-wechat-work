@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 )
 
 const wechatSendURL = "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=%s"
@@ -22,18 +23,39 @@ type WechatMsgText struct {
 	Content string `json:"content"`
 }
 
-func SendText(message string, toUser string, agentID int, accessToken AccessToken) (err error) {
+var TextChannel chan WechatMsg
+
+func Init() {
+	TextChannel = make(chan WechatMsg, 1)
+}
+
+func Test1() {
+
+	fmt.Println("sending")
+	toUser := "jackxie"
+	agentID := 1000002
+	var text1 WechatMsg
+	for i := 0; i < 10; i++ {
+		stringI := "paipai xie " + strconv.Itoa(i)
+		text1 = WechatMsg{
+			ToUser:  toUser,
+			MsgType: "text",
+			AgentID: agentID,
+			TextBody: WechatMsgText{
+				Content: stringI,
+			},
+			Safe: 0,
+		}
+		fmt.Println(text1)
+		TextChannel <- text1
+		SendText()
+	}
+}
+
+func SendText() (err error) {
 	url := fmt.Sprintf(wechatSendURL, accessToken.EccessToken)
 
-	wechatMsg := &WechatMsg{
-		ToUser:  toUser,
-		MsgType: "text",
-		AgentID: agentID,
-		TextBody: WechatMsgText{
-			Content: message,
-		},
-		Safe: 0,
-	}
+	wechatMsg := <-TextChannel
 
 	reqBody, err := json.Marshal(wechatMsg)
 	if err != nil {
