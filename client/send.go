@@ -35,7 +35,7 @@ func Test1() {
 	toUser := "jackxie"
 	agentID := 1000002
 	var text1 WechatMsg
-	for i := 0; i < 10; i++ {
+	for i := 0; i < 2; i++ {
 		stringI := "paipai xie " + strconv.Itoa(i)
 		text1 = WechatMsg{
 			ToUser:  toUser,
