@@ -1,24 +1,16 @@
 package pool
 
 import (
-	"fmt"
 	"log"
-)
 
-type Work struct {
-	ID  int
-	Job string
-}
+	wechatclient "github.com/rdxsl/go-wechat-work/client"
+)
 
 type Worker struct {
 	ID            int
-	WorkerChannel chan chan Work // used to communicate between dispatcher and workers
-	Channel       chan Work
+	WorkerChannel chan chan wechatclient.WechatMsg // used to communicate between dispatcher and workers
+	Channel       chan wechatclient.WechatMsg
 	End           chan bool
-}
-
-func DoWork(work string, id int) {
-	fmt.Println(work)
 }
 
 // start worker
@@ -27,8 +19,8 @@ func (w *Worker) Start() {
 		for {
 			w.WorkerChannel <- w.Channel // when the worker is available place channel in queue
 			select {
-			case job := <-w.Channel: // worker has received job
-				DoWork(job.Job, w.ID) // do work
+			case wechatText := <-w.Channel: // worker has received job
+				wechatclient.SendText(wechatText)
 			case <-w.End:
 				return
 			}

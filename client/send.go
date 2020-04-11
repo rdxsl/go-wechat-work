@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"strconv"
 )
 
 const wechatSendURL = "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=%s"
@@ -23,39 +22,15 @@ type WechatMsgText struct {
 	Content string `json:"content"`
 }
 
-var TextChannel chan WechatMsg
-
-func Init() {
-	TextChannel = make(chan WechatMsg, 1)
+type WechatMsgSendReturn struct {
+	ErrCode int64  `json:"errcdoe"`
+	ErrMsg  string `json.:"errmsg"`
 }
 
-func Test1() {
-
-	fmt.Println("sending")
-	toUser := "jackxie"
-	agentID := 1000002
-	var text1 WechatMsg
-	for i := 0; i < 2; i++ {
-		stringI := "paipai xie " + strconv.Itoa(i)
-		text1 = WechatMsg{
-			ToUser:  toUser,
-			MsgType: "text",
-			AgentID: agentID,
-			TextBody: WechatMsgText{
-				Content: stringI,
-			},
-			Safe: 0,
-		}
-		fmt.Println(text1)
-		TextChannel <- text1
-		SendText()
-	}
-}
-
-func SendText() (err error) {
+func SendText(wechatMsg WechatMsg) (err error) {
+	accessToken.mu.RLock()
+	defer accessToken.mu.RUnlock()
 	url := fmt.Sprintf(wechatSendURL, accessToken.EccessToken)
-
-	wechatMsg := <-TextChannel
 
 	reqBody, err := json.Marshal(wechatMsg)
 	if err != nil {
@@ -70,6 +45,12 @@ func SendText() (err error) {
 	if err != nil {
 		return
 	}
-	fmt.Println(string(body))
+	var wmr WechatMsgSendReturn
+	json.Unmarshal(body, wmr)
+	fmt.Println(wechatMsg)
+	fmt.Println(wmr)
+	if wmr.ErrCode != 0 {
+		return fmt.Errorf("wechat send return with error code %d, error msg %s", wmr.ErrCode, wmr.ErrMsg)
+	}
 	return
 }
