@@ -10,13 +10,13 @@ import (
 	pool "github.com/rdxsl/go-wechat-work/workerpool"
 )
 
-func Test1(collector pool.Collector) {
+func Test(collector pool.Collector) {
 	fmt.Println("sending")
 	toUser := "jackxie"
 	agentID := 1000002
 	var text1 wechatclient.WechatMsg
-	for i := 0; i < 32; i++ {
-		stringI := "paipai xie " + strconv.Itoa(i)
+	for i := 0; i < 3; i++ {
+		stringI := "this is a from RDX-sl " + strconv.Itoa(i)
 		text1 = wechatclient.WechatMsg{
 			ToUser:  toUser,
 			MsgType: "text",
@@ -42,6 +42,6 @@ func main() {
 	}
 
 	collector := pool.StartDispatcher(WORKER_COUNT)
-	Test1(collector)
+	Test(collector)
 	time.Sleep(5 * time.Second)
 }

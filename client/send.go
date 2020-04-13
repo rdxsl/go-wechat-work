@@ -47,8 +47,6 @@ func SendText(wechatMsg WechatMsg) (err error) {
 	}
 	var wmr WechatMsgSendReturn
 	json.Unmarshal(body, wmr)
-	fmt.Println(wechatMsg)
-	fmt.Println(wmr)
 	if wmr.ErrCode != 0 {
 		return fmt.Errorf("wechat send return with error code %d, error msg %s", wmr.ErrCode, wmr.ErrMsg)
 	}
