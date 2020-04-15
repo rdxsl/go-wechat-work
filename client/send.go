@@ -13,6 +13,8 @@ const wechatSendURL = "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_t
 const wechatSendRetry = 3
 
 type WechatMsg struct {
+	ToTag    string        `json:"totag"`
+	ToParty  string        `json:"toparty"`
 	ToUser   string        `json:"touser"`
 	MsgType  string        `json:"msgtype"`
 	AgentID  int           `json:"agentid"`
