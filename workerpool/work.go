@@ -20,7 +20,7 @@ func (w *Worker) Start() {
 			w.WorkerChannel <- w.Channel // when the worker is available place channel in queue
 			select {
 			case wechatText := <-w.Channel: // worker has received job
-				wechatclient.SendText(wechatText)
+				wechatclient.SendText(wechatText, "", "")
 			case <-w.End:
 				return
 			}

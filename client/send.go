@@ -29,17 +29,17 @@ type WechatMsgSendReturn struct {
 	ErrMsg  string `json.:"errmsg"`
 }
 
-func SendTextNoToken(wechatMsg WechatMsg) (err error) {
+func SendText(wechatMsg WechatMsg, wechatCorpID string, wechatCorpSecret string) (err error) {
 
-	err = GetAccessTocken(false, "", "")
+	err = GetAccessTocken(false, wechatCorpID, wechatCorpSecret)
 	if err != nil {
 		return
 	}
-	err = SendText(wechatMsg)
+	err = send(wechatMsg)
 	return
 }
 
-func SendText(wechatMsg WechatMsg) (err error) {
+func send(wechatMsg WechatMsg) (err error) {
 	accessToken.mu.RLock()
 	defer accessToken.mu.RUnlock()
 	url := fmt.Sprintf(wechatSendURL, accessToken.EccessToken)

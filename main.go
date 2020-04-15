@@ -25,7 +25,7 @@ func Test(collector pool.Collector) {
 			},
 			Safe: 0,
 		}
-		wechatclient.SendTextNoToken(text1)
+		wechatclient.SendText(text1, "", "")
 		// collector.Work <- text1
 	}
 }
