@@ -10,6 +10,8 @@ import (
 
 const wechatSendURL = "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=%s"
 
+const wechatSendRetry = 3
+
 type WechatMsg struct {
 	ToUser   string        `json:"touser"`
 	MsgType  string        `json:"msgtype"`
@@ -25,6 +27,16 @@ type WechatMsgText struct {
 type WechatMsgSendReturn struct {
 	ErrCode int64  `json:"errcdoe"`
 	ErrMsg  string `json.:"errmsg"`
+}
+
+func SendTextNoToken(wechatMsg WechatMsg) (err error) {
+
+	err = GetAccessTocken(false, "", "")
+	if err != nil {
+		return
+	}
+	err = SendText(wechatMsg)
+	return
 }
 
 func SendText(wechatMsg WechatMsg) (err error) {

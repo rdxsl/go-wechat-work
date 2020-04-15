@@ -25,31 +25,35 @@ type AccessToken struct {
 
 var accessToken AccessToken
 
-func GetAccessTocken(force bool) (err error) {
+func GetAccessTocken(force bool, wechatCorpID string, wechatCorpSecret string) (err error) {
 
 	// never get the access token yet, call the wechat api
 	if accessToken.timeStamp == 0 {
-		return getAccessToken()
+		return getAccessToken(wechatCorpID, wechatCorpSecret)
 	}
 
 	// token expired, refresh
 	if accessToken.timeStamp+int64(accessToken.ExpiresIn) < time.Now().Unix() {
-		return getAccessToken()
+		return getAccessToken(wechatCorpID, wechatCorpSecret)
 	}
 
 	if force == true {
-		return getAccessToken()
+		return getAccessToken(wechatCorpID, wechatCorpSecret)
 	}
 
 	return nil
 }
 
-func getAccessToken() (err error) {
+func getAccessToken(wechatCorpID string, wechatCorpSecret string) (err error) {
 	var netClient = &http.Client{
 		Timeout: time.Second * httpTimeOut,
 	}
-	wechatCorpID := os.Getenv("WECHAT_CORPID")
-	wechatCorpSecret := os.Getenv("WECHAT_CORPSECRET")
+	if wechatCorpID == "" {
+		wechatCorpID = os.Getenv("WECHAT_CORPID")
+	}
+	if wechatCorpSecret == "" {
+		wechatCorpSecret = os.Getenv("WECHAT_CORPSECRET")
+	}
 	if wechatCorpID == "" || wechatCorpSecret == "" {
 		err = fmt.Errorf("env variable WECHAT_CORPID or WECHAT_CORPSECRET is empty")
 		return

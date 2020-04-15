@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"strconv"
 	"time"
 
@@ -26,7 +25,8 @@ func Test(collector pool.Collector) {
 			},
 			Safe: 0,
 		}
-		collector.Work <- text1
+		wechatclient.SendTextNoToken(text1)
+		// collector.Work <- text1
 	}
 }
 
@@ -34,12 +34,12 @@ const WORKER_COUNT = 5
 
 func main() {
 
-	err := wechatclient.GetAccessTocken(false)
+	// err := wechatclient.GetAccessTocken(false, "", "")
 
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "error: %v\n", err)
-		os.Exit(1)
-	}
+	// if err != nil {
+	// 	fmt.Fprintf(os.Stderr, "error: %v\n", err)
+	// 	os.Exit(1)
+	// }
 
 	collector := pool.StartDispatcher(WORKER_COUNT)
 	Test(collector)
