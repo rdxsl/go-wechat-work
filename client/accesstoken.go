@@ -12,6 +12,8 @@ import (
 
 const wechatWorkAPI = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=%s&corpsecret=%s"
 
+const httpTimeOut = 10
+
 type AccessToken struct {
 	ErrorCode   int    `json:"errorcode"`
 	ErrorMsg    string `json:"errmsg"`
@@ -43,6 +45,9 @@ func GetAccessTocken(force bool) (err error) {
 }
 
 func getAccessToken() (err error) {
+	var netClient = &http.Client{
+		Timeout: time.Second * httpTimeOut,
+	}
 	wechatCorpID := os.Getenv("WECHAT_CORPID")
 	wechatCorpSecret := os.Getenv("WECHAT_CORPSECRET")
 	if wechatCorpID == "" || wechatCorpSecret == "" {
@@ -51,7 +56,7 @@ func getAccessToken() (err error) {
 	}
 
 	wechatURL := fmt.Sprintf(wechatWorkAPI, wechatCorpID, wechatCorpSecret)
-	resp, err := http.Get(wechatURL)
+	resp, err := netClient.Get(wechatURL)
 	if err != nil {
 		return
 	}
