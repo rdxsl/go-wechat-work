@@ -1,7 +1,9 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"os"
 	"strconv"
 	"time"
 
@@ -11,20 +13,22 @@ import (
 
 func Test(collector pool.Collector) {
 	fmt.Println("sending")
-	toUser := "jackxie"
+	toUser := "2"
 	agentID := 1000002
 	var text1 wechatclient.WechatMsg
 	for i := 0; i < 3; i++ {
 		stringI := "this is a from RDX-sl " + strconv.Itoa(i)
 		text1 = wechatclient.WechatMsg{
-			ToUser:  toUser,
-			MsgType: "text",
+			ToTag:   toUser,
+			MsgType: "markdown",
 			AgentID: agentID,
-			TextBody: wechatclient.WechatMsgText{
+			MarkDownBody: wechatclient.WechatMsgMarkDown{
 				Content: stringI,
 			},
 			Safe: 0,
 		}
+		enc := json.NewEncoder(os.Stdout)
+		enc.Encode(text1)
 		wechatclient.SendText(text1, "", "")
 		// collector.Work <- text1
 	}

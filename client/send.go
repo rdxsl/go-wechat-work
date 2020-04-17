@@ -13,13 +13,21 @@ const wechatSendURL = "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_t
 const wechatSendRetry = 3
 
 type WechatMsg struct {
-	ToTag    string        `json:"totag"`
-	ToParty  string        `json:"toparty"`
-	ToUser   string        `json:"touser"`
-	MsgType  string        `json:"msgtype"`
-	AgentID  int           `json:"agentid"`
-	TextBody WechatMsgText `json:"text"`
-	Safe     int           `json:"safe"`
+	ToTag                  string            `json:"totag"`
+	ToParty                string            `json:"toparty"`
+	ToUser                 string            `json:"touser"`
+	MsgType                string            `json:"msgtype"`
+	AgentID                int               `json:"agentid"`
+	TextBody               WechatMsgText     `json:"text,omitempty"`
+	MarkDownBody           WechatMsgMarkDown `json:"markdown,omitempty"`
+	Safe                   int               `json:"safe"`
+	EnableIDTrans          int               `json:"enable_id_trans"`
+	EnableDuplicateCheck   int               `json:"enable_duplicate_check"`
+	DuplicateCheckInterval int               `json:"duplicate_check_interval"`
+}
+
+type WechatMsgMarkDown struct {
+	Content string `json:"content"`
 }
 
 type WechatMsgText struct {
