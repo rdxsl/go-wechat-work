@@ -52,7 +52,7 @@ func SendText(wechatMsg WechatMsg, wechatCorpID string, wechatCorpSecret string)
 func send(wechatMsg WechatMsg) (err error) {
 	accessToken.mu.RLock()
 	defer accessToken.mu.RUnlock()
-	url := fmt.Sprintf(wechatSendURL, accessToken.EccessToken)
+	url := fmt.Sprintf(wechatSendURL, accessToken.AccessToken)
 
 	reqBody, err := json.Marshal(wechatMsg)
 	if err != nil {

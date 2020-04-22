@@ -8,10 +8,9 @@ import (
 	"time"
 
 	wechatclient "github.com/rdxsl/go-wechat-work/client"
-	pool "github.com/rdxsl/go-wechat-work/workerpool"
 )
 
-func Test(collector pool.Collector) {
+func Test() {
 	fmt.Println("sending")
 	toUser := "2"
 	agentID := 1000002
@@ -30,22 +29,12 @@ func Test(collector pool.Collector) {
 		enc := json.NewEncoder(os.Stdout)
 		enc.Encode(text1)
 		wechatclient.SendText(text1, "", "")
-		// collector.Work <- text1
 	}
 }
 
 const WORKER_COUNT = 5
 
 func main() {
-
-	// err := wechatclient.GetAccessTocken(false, "", "")
-
-	// if err != nil {
-	// 	fmt.Fprintf(os.Stderr, "error: %v\n", err)
-	// 	os.Exit(1)
-	// }
-
-	collector := pool.StartDispatcher(WORKER_COUNT)
-	Test(collector)
+	Test()
 	time.Sleep(5 * time.Second)
 }
